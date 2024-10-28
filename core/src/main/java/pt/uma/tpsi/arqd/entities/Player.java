@@ -47,8 +47,8 @@ public class Player {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             posX += 5;
-            if (posX > Gdx.graphics.getWidth() - animator.getWidth()) {
-                posX = Gdx.graphics.getWidth() - animator.getWidth();
+            if (posX > Gdx.graphics.getWidth()) {
+                posX = Gdx.graphics.getWidth();
             }
         }
 
@@ -62,6 +62,10 @@ public class Player {
         // Cria um novo laser na posição atual do jogador
         Laser laser = new Laser(posX + (animator.getWidth() / 2) - (laserWidth / 2), posY + animator.getHeight(), laserWidth, laserHeight, laserSpeed);
         lasers.add(laser); // Adiciona o laser à lista de lasers disparados
+    }
+
+    public ArrayList<Laser> getLasers() {
+        return lasers;
     }
 
     public void dispose() {

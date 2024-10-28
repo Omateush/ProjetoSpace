@@ -18,23 +18,21 @@ public class Main extends ApplicationAdapter {
     public void create() {
         Gdx.graphics.setWindowedMode(1280, 800);
         batch = new SpriteBatch();
-        backgroundManagement = new BackgroundManagement(); // Inicializando sem o batch
+        backgroundManagement = new BackgroundManagement();
         player = new Player(batch, 100, 20);
         fleet = new Fleet(batch);
     }
 
     @Override
     public void render() {
-        // Limpa a tela
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Início do desenho
         batch.begin();
-        backgroundManagement.render(batch); // Passando o batch para renderizar o fundo
+        backgroundManagement.render(batch);
         player.render(batch);
-        fleet.render(batch);
-        batch.end(); // Fim do desenho
+        fleet.render(batch, player.getLasers()); // Passando os lasers do player para a fleet
+        batch.end();
     }
 
     @Override
