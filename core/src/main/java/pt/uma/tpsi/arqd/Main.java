@@ -31,7 +31,7 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         backgroundManagement.render(batch);
         player.render(batch);
-        fleet.render(batch, player.getLasers()); // Passando os lasers do player para a fleet
+        fleet.render(batch, player.getLasers()); // Passando os lasers do jogador para a Fleet
         batch.end();
     }
 
