@@ -1,33 +1,21 @@
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+package pt.uma.tpsi.arqd.game;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
 
 public class GameHUD {
-    private BitmapFont font;
     private int playerHealth;
-    private int playerScore;
 
     public GameHUD() {
-        font = new BitmapFont();
-        playerHealth = 100; // Valor inicial da vida do jogador
-        playerScore = 0;    // Pontuação inicial
-    }
-
-    public void render(SpriteBatch batch) {
-        batch.begin();
-        font.draw(batch, "Vida: " + playerHealth, 10, 470);
-        font.draw(batch, "Pontuação: " + playerScore, 10, 440);
-        batch.end();
+        this.playerHealth = 100; // Valor inicial da saúde do jogador
     }
 
     public void updatePlayerHealth(int health) {
         this.playerHealth = health;
     }
 
-    public void updatePlayerScore(int score) {
-        this.playerScore = score;
-    }
-
-    public void dispose() {
-        font.dispose();
+    public void render(SpriteBatch batch) {
+        // Renderiza o texto na tela usando a altura da tela
+        BitmapFont.drawText(10, Gdx.graphics.getHeight() - 10, "Health: " + playerHealth, batch);
     }
 }

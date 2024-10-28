@@ -7,19 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import pt.uma.tpsi.arqd.entities.Fleet;
 import pt.uma.tpsi.arqd.entities.Player;
 import pt.uma.tpsi.arqd.game.BackgroundManagement;
+import pt.uma.tpsi.arqd.game.GameHUD;
 
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private BackgroundManagement backgroundManagement;
     private Player player;
     private Fleet fleet;
+    private GameHUD hud;
 
     @Override
     public void create() {
-        Gdx.graphics.setWindowedMode(1280, 800);
         batch = new SpriteBatch();
         backgroundManagement = new BackgroundManagement();
-        player = new Player(batch, 100, 20);
+        hud = new GameHUD(); // Inicializando o HUD
+        player = new Player(batch, 100, 20, hud); // Passando o HUD para o Player
         fleet = new Fleet(batch);
     }
 
@@ -31,7 +33,8 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         backgroundManagement.render(batch);
         player.render(batch);
-        fleet.render(batch, player.getLasers()); // Passando os lasers do jogador para a Fleet
+        fleet.render(batch, player.getLasers(), player);
+        hud.render(batch); // Renderizando o HUD
         batch.end();
     }
 

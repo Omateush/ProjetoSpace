@@ -7,36 +7,52 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Animator {
+
+    private int FRAME_COLS, FRAME_ROWS;
     private Animation<TextureRegion> walkAnimation;
     private Texture walkSheet;
     private float stateTime;
-    private int frameCols, frameRows;
     private int width, height;
+    private boolean flip;
 
-    public Animator(SpriteBatch batch, String path, int frameCols, int frameRows) {
-        this.frameCols = frameCols;
-        this.frameRows = frameRows;
+    public Animator(SpriteBatch batch, String path, int columns, int rows) {
+        this.FRAME_COLS = columns;
+        this.FRAME_ROWS = rows;
+        this.flip = false;
         walkSheet = new Texture(Gdx.files.internal(path));
 
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / frameCols, walkSheet.getHeight() / frameRows);
-        TextureRegion[] walkFrames = new TextureRegion[frameCols * frameRows];
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet,
+            walkSheet.getWidth() / FRAME_COLS,
+            walkSheet.getHeight() / FRAME_ROWS);
+
+        TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
-        for (int i = 0; i < frameRows; i++) {
-            for (int j = 0; j < frameCols; j++) {
+        for (int i = 0; i < FRAME_ROWS; i++) {
+            for (int j = 0; j < FRAME_COLS; j++) {
                 walkFrames[index++] = tmp[i][j];
             }
         }
 
-        walkAnimation = new Animation<>(0.1f, walkFrames);
+        walkAnimation = new Animation<>(0.095f, walkFrames);
         stateTime = 0f;
-        width = walkSheet.getWidth() / frameCols;
-        height = walkSheet.getHeight() / frameRows;
+        this.width = walkSheet.getWidth() / FRAME_COLS;
+        this.height = walkSheet.getHeight() / FRAME_ROWS;
     }
 
-    public void render(SpriteBatch batch, int x, int y) {
+    public void setFlip(boolean flip) {
+        this.flip = flip;
+    }
+
+    public void render(SpriteBatch batch, int posX, int posY) {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-        batch.draw(currentFrame, x, y);
+
+        // Assumindo que o SpriteBatch já foi iniciado no método de renderização que chamou este método
+        batch.draw(currentFrame, flip ? posX + width : posX, posY, flip ? -width : width, height);
+    }
+
+    public void dispose() {
+        walkSheet.dispose();
     }
 
     public int getWidth() {
@@ -45,9 +61,5 @@ public class Animator {
 
     public int getHeight() {
         return height;
-    }
-
-    public void dispose() {
-        walkSheet.dispose();
     }
 }
