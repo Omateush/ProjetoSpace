@@ -16,24 +16,27 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Gdx.graphics.setWindowedMode(1280, 800);
         batch = new SpriteBatch();
-        backgroundManagement = new BackgroundManagement();
-        hud = new GameHUD(); // Inicializando o HUD
-        player = new Player(batch, 100, 20, hud); // Passando o HUD para o player
-        fleet = new Fleet(batch);
+        backgroundManagement = new BackgroundManagement(); // Inicializando sem o batch
+        hud = new GameHUD(); // Inicializa o HUD do jogo
+        player = new Player(batch, 100, 20, hud); // Passando o hud como argumento
+        fleet = new Fleet(batch, hud); // Passando o hud também para a fleet se necessário
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        // Limpa a tela
+        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Início do desenho
         batch.begin();
-        backgroundManagement.render(batch);
+        backgroundManagement.render(batch); // Passando o batch para renderizar o fundo
         player.render(batch);
-        fleet.render(batch, player.getLasers(), player);
-        hud.render(batch); // Renderizando o HUD
-        batch.end();
+        fleet.render(batch, player.getLasers(), player); // Passando o jogador e seus lasers
+        hud.render(batch); // Renderiza o HUD
+        batch.end(); // Fim do desenho
     }
 
     @Override

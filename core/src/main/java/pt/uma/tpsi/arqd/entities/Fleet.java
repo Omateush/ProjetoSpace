@@ -1,37 +1,55 @@
 package pt.uma.tpsi.arqd.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Timer;
+import pt.uma.tpsi.arqd.game.GameHUD;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Fleet {
     private ArrayList<EnemyShip> enemyShips;
-    private final int enemiesPerRow = 10;
-    private final float enemyWidth = 50, enemyHeight = 50;
-    private final float spacingX = 100, spacingY = 100;
-    private Random random;
+    private float elapsedTime;
+    private GameHUD hud;
 
-    public Fleet(SpriteBatch batch) {
+    public Fleet(SpriteBatch batch, GameHUD hud) {
+        this.hud = hud;
         enemyShips = new ArrayList<>();
-        random = new Random();
+        elapsedTime = 0;
 
-        // Inicializando as fileiras de inimigos
-        for (int i = 0; i < enemiesPerRow; i++) {
-            float x = i * (enemyWidth + spacingX);
-            float yBig = 800 - 100; // Posição na tela para a primeira fileira
-            float yMedium = 800 - 200; // Posição na tela para a segunda fileira
-            float ySmall = 800 - 300; // Posição na tela para a terceira fileira
-
-            enemyShips.add(new EnemyShip(batch, x, yBig, (int) enemyWidth, (int) enemyHeight, "enemy-big.png", 2, 1));
-            enemyShips.add(new EnemyShip(batch, x, yMedium, (int) enemyWidth, (int) enemyHeight, "enemy-medium.png", 2, 1));
-            enemyShips.add(new EnemyShip(batch, x, ySmall, (int) enemyWidth, (int) enemyHeight, "enemy-small.png", 2, 1));
+        // Adiciona inimigos ao Fleet (exemplo simplificado)
+        for (int i = 0; i < 5; i++) {
+            float x = i * 100 + 400;
+            float y = 700;
+            enemyShips.add(new EnemyShip(batch, x, y, 100, 100, "enemy-big.png", 2, 1));
         }
 
-        // Iniciar disparos das naves inimigas
-        scheduleEnemyShots();
+        // Adiciona inimigos ao Fleet (exemplo simplificado)
+        for (int i = 0; i < 5; i++) {
+            float x = i * 100 + 400;
+            float y = 500;
+            enemyShips.add(new EnemyShip(batch, x, y, 100, 100, "enemy-medium.png", 2, 1));
+        }
+
+        // Adiciona inimigos ao Fleet (exemplo simplificado)
+        for (int i = 0; i < 5; i++) {
+            float x = i * 100 + 400;
+            float y = 300;
+            enemyShips.add(new EnemyShip(batch, x, y, 100, 100, "enemy-small.png", 2, 1));
+        }
+
+
+        // Agendar disparos aleatórios das naves inimigas
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                Random random = new Random();
+                if (!enemyShips.isEmpty()) {
+                    EnemyShip randomEnemy = enemyShips.get(random.nextInt(enemyShips.size()));
+                    randomEnemy.shoot();
+                }
+            }
+        }, 2, 2);
     }
 
     public void render(SpriteBatch batch, ArrayList<Laser> playerLasers, Player player) {
@@ -39,30 +57,21 @@ public class Fleet {
             enemyShip.render(batch);
         }
 
-        // Verificar colisão entre lasers inimigos e o jogador
+        // Verificar colisões entre lasers dos inimigos e o jogador
         for (EnemyShip enemy : enemyShips) {
-            for (Laser laser : enemy.getLasers()) {
+            Iterator<Laser> laserIterator = enemy.getLasers().iterator();
+            while (laserIterator.hasNext()) {
+                Laser laser = laserIterator.next();
+                laser.update();
+                laser.render(batch);
+
+                // Verificar se o laser colide com o jogador
                 if (laser.getBoundingBox().overlaps(player.getBoundingBox())) {
                     player.takeDamage();
+                    laserIterator.remove(); // Remove o laser após acertar o jogador para evitar múltiplas colisões
                 }
             }
         }
-    }
-
-    private void scheduleEnemyShots() {
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Gdx.app.postRunnable(() -> {
-                    if (!enemyShips.isEmpty()) {
-                        int randomIndex = random.nextInt(enemyShips.size());
-                        EnemyShip randomEnemy = enemyShips.get(randomIndex);
-                        randomEnemy.shoot();
-                    }
-                });
-            }
-        }, 0, 2000); // A cada 2 segundos
     }
 
     public void dispose() {
