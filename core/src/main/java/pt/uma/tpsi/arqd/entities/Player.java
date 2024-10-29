@@ -36,23 +36,37 @@ public class Player {
             Laser laser = laserIterator.next();
             laser.update();
             laser.render(batch);
-            if (laser.getY() > 800) { // Limite da tela
+            if (laser.getY() > Gdx.graphics.getHeight()) { // Limite superior da tela
                 laserIterator.remove();
             }
         }
     }
 
     private void handleInput() {
-        // Lógica de movimentação e disparo
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) x -= 5;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x += 5;
+        // Movimento para a esquerda
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            x -= 5;
+            if (x < 0) {  // Limite esquerdo da tela
+                x = 0;
+            }
+        }
+
+        // Movimento para a direita
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            x += 5;
+            if (x + animator.getWidth() > Gdx.graphics.getWidth()) {  // Limite direito da tela
+                x = Gdx.graphics.getWidth() - animator.getWidth();
+            }
+        }
+
+        // Disparo
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             shoot();
         }
     }
 
     private void shoot() {
-        lasers.add(new Laser(x + 20, y + 40, 5, 10, 10)); // Configura o laser
+        lasers.add(new Laser(x + animator.getWidth() / 2 - 2, y + animator.getHeight(), 5, 10, 10)); // Configura o laser centralizado
     }
 
     public ArrayList<Laser> getLasers() {
@@ -64,7 +78,7 @@ public class Player {
         hud.updatePlayerHealth(health); // Atualiza o HUD
     }
 
-    public int getHealth() { // Adiciona o método getHealth
+    public int getHealth() {
         return health;
     }
 
