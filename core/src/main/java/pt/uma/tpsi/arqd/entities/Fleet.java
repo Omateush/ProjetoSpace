@@ -11,6 +11,7 @@ public class Fleet {
     private ArrayList<EnemyShip> enemyShips;
     private float elapsedTime;
     private GameHUD hud;
+    //ignora
 
     public Fleet(SpriteBatch batch, GameHUD hud) {
         this.hud = hud;
