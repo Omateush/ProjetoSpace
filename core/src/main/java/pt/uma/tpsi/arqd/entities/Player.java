@@ -24,7 +24,7 @@ public class Player {
         this.health = 100;
         this.animator = new Animator(batch, "ship.png", 5, 2); // Configuração do Animator
         this.lasers = new ArrayList<>();
-        this.hud.setPlayerHealth(health); // Inicializa a saúde no HUD
+        this.hud.updatePlayerHealth(health); // Inicializa a saúde no HUD
     }
 
     public void render(SpriteBatch batch) {
@@ -42,10 +42,26 @@ public class Player {
         }
     }
 
+
+    // Dentro da classe Player
     private void handleInput() {
-        // Lógica de movimentação e disparo
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) x -= 5;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x += 5;
+        // Movimento para a esquerda
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            x -= 5;
+            if (x < 0) {  // Limite esquerdo da tela
+                x = 0;
+            }
+        }
+
+        // Movimento para a direita
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            x += 5;
+            if (x + animator.getWidth() > Gdx.graphics.getWidth()) {  // Limite direito da tela
+                x = Gdx.graphics.getWidth() - animator.getWidth();
+            }
+        }
+
+        // Disparo
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             shoot();
         }

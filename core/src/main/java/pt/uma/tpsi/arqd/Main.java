@@ -12,35 +12,37 @@ import pt.uma.tpsi.arqd.game.GameHUD;
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private BackgroundManagement backgroundManagement;
+    private GameHUD hud;
     private Player player;
     private Fleet fleet;
-    private GameHUD hud;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        hud = new GameHUD();
-        backgroundManagement = new BackgroundManagement();
-        player = new Player(batch, 100, 20, hud);
-        fleet = new Fleet(batch);
+        backgroundManagement = new BackgroundManagement(); // Inicializa o fundo
+        hud = new GameHUD(); // Inicializa o HUD
+        player = new Player(batch, 100, 20, hud); // Passa o HUD para o player
+        fleet = new Fleet(batch, hud); // Passa o HUD para a Fleet
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        // Removendo a linha de Gdx.gl.glClearColor para não aplicar cor de fundo
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
-        backgroundManagement.render(batch);
+        backgroundManagement.render(batch); // Renderiza o fundo
+        hud.render(batch); // Renderiza o HUD
         player.render(batch);
-        fleet.render(batch, player.getLasers());
-        hud.render(batch);
+        fleet.render(batch, player.getLasers(), player); // Renderiza a Fleet e passa o player para colisões
         batch.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        backgroundManagement.dispose();
+        backgroundManagement.dispose(); // Libera o fundo
+        hud.dispose();
         player.dispose();
         fleet.dispose();
     }
