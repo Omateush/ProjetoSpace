@@ -22,7 +22,7 @@ public class Main extends ApplicationAdapter {
         backgroundManagement = new BackgroundManagement(); // Inicializa o fundo
         hud = new GameHUD(); // Inicializa o HUD
         player = new Player(batch, 100, 20, hud); // Passa o HUD para o player
-        fleet = new Fleet(batch, hud); // Passa o HUD para a Fleet
+        fleet = new Fleet(batch,hud); // Passa o HUD para a Fleet
     }
 
     @Override

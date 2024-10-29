@@ -10,34 +10,36 @@ import java.util.Iterator;
 
 public class Fleet {
     private ArrayList<EnemyShip> enemyShips;
+    private ArrayList<Explosion> explosions; // Lista de explosões
+    private SpriteBatch batch;
 
     public Fleet(SpriteBatch batch, GameHUD hud) {
+        this.batch = batch;
         enemyShips = new ArrayList<>();
+        explosions = new ArrayList<>(); // Inicializa a lista de explosões
 
-        // Exemplo de inicialização de naves inimigas com largura e altura
         float enemyWidth = 60;
         float enemyHeight = 60;
 
         for (int i = 0; i < 10; i++) {
-            float x = i * 60; // Ajuste de posição
-            float y = 500; // Posição Y das naves
+            float x = i * 60;
+            float y = 500;
             enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-big.png", 2, 1));
         }
 
-        // Programação do disparo a cada 2 segundos
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                shootAtPlayer(); // Chama o método para atirar no jogador
+                shootAtPlayer();
             }
-        }, 2, 1); // Atraso inicial de 2 segundos, repete a cada 2 segundos
+        }, 2, 2); // Disparo a cada 2 segundos
     }
 
     private void shootAtPlayer() {
         if (!enemyShips.isEmpty()) {
             int randomIndex = MathUtils.random(enemyShips.size() - 1);
             EnemyShip randomEnemy = enemyShips.get(randomIndex);
-            randomEnemy.shoot();
+            randomEnemy.shoot(); // Chama o método de disparo
         }
     }
 
@@ -49,26 +51,37 @@ public class Fleet {
             enemy.render(batch);
 
             // Verificar colisão entre os lasers do player e as naves inimigas
-            boolean enemyHit = false;
-            for (Laser laser : playerLasers) {
-                if (laser.collidesWith(enemy.getBoundingBox())) {
-                    enemyIterator.remove(); // Remove a nave se atingida
-                    enemyHit = true;
-                    break;
-                }
-            }
-            if (enemyHit) continue;
-
-            // Verificar colisão entre os lasers inimigos e o player
-            Iterator<Laser> laserIterator = enemy.getLasers().iterator();
+            Iterator<Laser> laserIterator = playerLasers.iterator();
             while (laserIterator.hasNext()) {
                 Laser laser = laserIterator.next();
+
+                if (laser.collidesWith(enemy.getBoundingBox())) {
+                    explosions.add(new Explosion(enemy.getX(), enemy.getY())); // Cria uma explosão
+                    enemyIterator.remove(); // Remove a nave atingida
+                    laserIterator.remove(); // Remove o laser após a primeira colisão
+                    break; // Sai do loop para garantir que uma nave é atingida por vez
+                }
+            }
+
+            // Renderizar os lasers disparados pelas naves inimigas
+            for (Laser laser : enemy.getLasers()) {
                 laser.update();
                 laser.render(batch);
                 if (laser.collidesWith(player.getBoundingBox())) {
                     player.takeDamage();
-                    laserIterator.remove(); // Remove o laser se colidir com o player
+                    enemy.getLasers().remove(laser);
+                    break;
                 }
+            }
+        }
+
+        // Renderizar explosões
+        Iterator<Explosion> explosionIterator = explosions.iterator();
+        while (explosionIterator.hasNext()) {
+            Explosion explosion = explosionIterator.next();
+            explosion.render(batch);
+            if (explosion.isFinished()) {
+                explosionIterator.remove(); // Remove a explosão após finalizar
             }
         }
     }
@@ -76,6 +89,9 @@ public class Fleet {
     public void dispose() {
         for (EnemyShip enemy : enemyShips) {
             enemy.dispose();
+        }
+        for (Explosion explosion : explosions) {
+            explosion.dispose();
         }
     }
 }
