@@ -10,31 +10,31 @@ import java.util.Iterator;
 
 public class Fleet {
     private ArrayList<EnemyShip> enemyShips;
-    private ArrayList<Explosion> explosions; // Lista de explosões
+    private ArrayList<Explosion> explosions;
     private SpriteBatch batch;
 
     public Fleet(SpriteBatch batch, GameHUD hud) {
         this.batch = batch;
         enemyShips = new ArrayList<>();
-        explosions = new ArrayList<>(); // Inicializa a lista de explosões
+        explosions = new ArrayList<>();
 
         float enemyWidth = 60;
         float enemyHeight = 60;
 
-        for (int i = 0; i < 10; i++) {
-            float x = i * 60;
+        for (int i = 0; i < 8; i++) {
+            float x = i * 100;
             float y = 600;
             enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-big.png", 2, 1));
         }
 
-        for (int i = 0; i < 10; i++) {
-            float x = i * 60;
+        for (int i = 0; i < 8; i++) {
+            float x = i * 100;
             float y = 550;
             enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-medium.png", 2, 1));
         }
 
-        for (int i = 0; i < 10; i++) {
-            float x = i * 60;
+        for (int i = 0; i < 8; i++) {
+            float x = i * 100;
             float y = 500;
             enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-small.png", 2, 1));
         }
@@ -44,10 +44,10 @@ public class Fleet {
             public void run() {
                 shootAtPlayer();
             }
-        }, 2, 1); // Disparo a cada 2 segundos
+        }, 2, 1);
     }
 
-    public ArrayList<EnemyShip> getEnemyShips() { // Método para retornar a lista de naves inimigas
+    public ArrayList<EnemyShip> getEnemyShips() { //Lista de naves inimigas em arraylist
         return enemyShips;
     }
 
@@ -55,7 +55,7 @@ public class Fleet {
         if (!enemyShips.isEmpty()) {
             int randomIndex = MathUtils.random(enemyShips.size() - 1);
             EnemyShip randomEnemy = enemyShips.get(randomIndex);
-            randomEnemy.shoot(); // Chama o método de disparo
+            randomEnemy.shoot(); // chamando o metodo shoot();
         }
     }
 
@@ -66,16 +66,16 @@ public class Fleet {
             EnemyShip enemy = enemyIterator.next();
             enemy.render(batch);
 
-            // Verificar colisão entre os lasers do player e as naves inimigas
+            // Iterador para verificar colisao entre o player e as naves
             Iterator<Laser> laserIterator = playerLasers.iterator();
             while (laserIterator.hasNext()) {
                 Laser laser = laserIterator.next();
 
                 if (laser.collidesWith(enemy.getBoundingBox())) {
-                    explosions.add(new Explosion(enemy.getX(), enemy.getY())); // Cria uma explosão
-                    enemyIterator.remove(); // Remove a nave atingida
-                    laserIterator.remove(); // Remove o laser após a primeira colisão
-                    break; // Sai do loop para garantir que uma nave é atingida por vez
+                    explosions.add(new Explosion(enemy.getX(), enemy.getY())); // adiciona explosao
+                    enemyIterator.remove(); // remove a nave atingida
+                    laserIterator.remove(); // removendo o laser
+                    break; // Finalizando lop
                 }
             }
 

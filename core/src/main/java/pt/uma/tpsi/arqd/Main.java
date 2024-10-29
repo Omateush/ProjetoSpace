@@ -8,7 +8,7 @@ import pt.uma.tpsi.arqd.entities.Fleet;
 import pt.uma.tpsi.arqd.entities.Player;
 import pt.uma.tpsi.arqd.game.BackgroundManagement;
 import pt.uma.tpsi.arqd.game.GameHUD;
-import pt.uma.tpsi.arqd.game.BitmapFont; // Certifique-se de que a classe BitmapFont está corretamente importada
+import pt.uma.tpsi.arqd.game.BitmapFont;
 
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
@@ -16,14 +16,14 @@ public class Main extends ApplicationAdapter {
     private GameHUD hud;
     private Player player;
     private Fleet fleet;
-    private boolean gameEnded; // Verifica se o jogo terminou
-    private String endMessage; // Mensagem de fim de jogo
+    private boolean gameEnded;
+    private String endMessage;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        backgroundManagement = new BackgroundManagement(); // Inicializa o fundo
-        hud = new GameHUD(); // Inicializa o HUD
+        backgroundManagement = new BackgroundManagement();
+        hud = new GameHUD();
         player = new Player(batch, 100, 20, hud); // Passa o HUD para o player
         fleet = new Fleet(batch, hud); // Passa o HUD para a Fleet
         gameEnded = false;
@@ -35,16 +35,16 @@ public class Main extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        backgroundManagement.render(batch); // Renderiza o fundo
-        hud.render(batch); // Renderiza o HUD
+        backgroundManagement.render(batch);
+        hud.render(batch);
 
-        // Verifica se o jogo terminou antes de continuar
+
         if (!gameEnded) {
             player.render(batch);
-            fleet.render(batch, player.getLasers(), player); // Renderiza a Fleet e passa o player para colisões
-            checkGameEndConditions(); // Verifica condições de vitória ou derrota
+            fleet.render(batch, player.getLasers(), player); // renderiza o espaço onde o player vai estar e colisoes
+            checkGameEndConditions(); // Verifica se jogo terminou boolean sim ou nao
         } else {
-            // Exibe a mensagem de fim de jogo
+            // Mensagem do fim de jogo.
             BitmapFont.drawText(Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2, endMessage, batch);
         }
 
@@ -61,12 +61,4 @@ public class Main extends ApplicationAdapter {
         }
     }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-        backgroundManagement.dispose(); // Libera o fundo
-        hud.dispose();
-        player.dispose();
-        fleet.dispose();
-    }
 }

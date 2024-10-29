@@ -18,7 +18,7 @@ public class Explosion {
         this.y = y;
         explosionTexture = new Texture("explosion.png");
 
-        // Ajuste o número de frames com base na imagem "explosion.png"
+
         TextureRegion[][] tmpFrames = TextureRegion.split(explosionTexture, explosionTexture.getWidth() / 5, explosionTexture.getHeight());
         TextureRegion[] frames = new TextureRegion[5];
         for (int i = 0; i < 5; i++) {

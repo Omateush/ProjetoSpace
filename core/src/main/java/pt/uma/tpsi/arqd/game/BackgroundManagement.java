@@ -11,10 +11,10 @@ public class BackgroundManagement {
     private Sprite sprite;
 
     public BackgroundManagement() {
-        background = new Texture("space.png");
+        background = new Texture("space.jpg"); // AQUI POSSO MUDAR O BACKGROUND DO JOGO
         sprite = new Sprite(background);
 
-        // Ajusta o tamanho do sprite para a largura e altura da janela
+
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         sprite.setPosition(0, 0);
     }

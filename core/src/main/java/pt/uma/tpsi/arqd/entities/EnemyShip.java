@@ -1,7 +1,9 @@
 package pt.uma.tpsi.arqd.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import com.badlogic.gdx.math.Rectangle;
+
 import pt.uma.tpsi.arqd.game.Animator;
 
 import java.util.ArrayList;
