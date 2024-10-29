@@ -16,7 +16,6 @@ public class Player {
     private GameHUD hud;
     private int health = 100;
     private ArrayList<Laser> lasers;
-    private ArrayList<Explosion> explosions; // Lista de explosões para o player
 
     public Player(SpriteBatch batch, int x, int y, GameHUD hud) {
         this.x = x;
@@ -25,7 +24,6 @@ public class Player {
         this.health = 100;
         this.animator = new Animator(batch, "ship.png", 5, 2); // Configuração do Animator
         this.lasers = new ArrayList<>();
-        this.explosions = new ArrayList<>(); // Inicializa a lista de explosões
         this.hud.updatePlayerHealth(health); // Inicializa a saúde no HUD
     }
 
@@ -33,7 +31,6 @@ public class Player {
         handleInput(); // Movimenta e dispara
         animator.render(batch, x, y); // Renderiza o player na tela
 
-        // Renderiza e atualiza os lasers
         Iterator<Laser> laserIterator = lasers.iterator();
         while (laserIterator.hasNext()) {
             Laser laser = laserIterator.next();
@@ -43,36 +40,12 @@ public class Player {
                 laserIterator.remove();
             }
         }
-
-        // Renderiza as explosões
-        Iterator<Explosion> explosionIterator = explosions.iterator();
-        while (explosionIterator.hasNext()) {
-            Explosion explosion = explosionIterator.next();
-            explosion.render(batch);
-            if (explosion.isFinished()) {
-                explosionIterator.remove(); // Remove a explosão após finalizar
-            }
-        }
     }
 
     private void handleInput() {
-        // Movimento para a esquerda
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            x -= 5;
-            if (x < 0) {  // Limite esquerdo da tela
-                x = 0;
-            }
-        }
-
-        // Movimento para a direita
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            x += 5;
-            if (x + animator.getWidth() > Gdx.graphics.getWidth()) {  // Limite direito da tela
-                x = Gdx.graphics.getWidth() - animator.getWidth();
-            }
-        }
-
-        // Disparo
+        // Lógica de movimentação e disparo
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) x -= 5;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x += 5;
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             shoot();
         }
@@ -89,7 +62,10 @@ public class Player {
     public void takeDamage() {
         health -= 10;
         hud.updatePlayerHealth(health); // Atualiza o HUD
-        explosions.add(new Explosion(x, y)); // Adiciona uma explosão na posição atual do player
+    }
+
+    public int getHealth() { // Adiciona o método getHealth
+        return health;
     }
 
     public Rectangle getBoundingBox() {

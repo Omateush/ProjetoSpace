@@ -23,8 +23,20 @@ public class Fleet {
 
         for (int i = 0; i < 10; i++) {
             float x = i * 60;
-            float y = 500;
+            float y = 600;
             enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-big.png", 2, 1));
+        }
+
+        for (int i = 0; i < 10; i++) {
+            float x = i * 60;
+            float y = 550;
+            enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-medium.png", 2, 1));
+        }
+
+        for (int i = 0; i < 10; i++) {
+            float x = i * 60;
+            float y = 500;
+            enemyShips.add(new EnemyShip(batch, x, y, enemyWidth, enemyHeight, "enemy-small.png", 2, 1));
         }
 
         Timer.schedule(new Timer.Task() {
@@ -32,7 +44,11 @@ public class Fleet {
             public void run() {
                 shootAtPlayer();
             }
-        }, 2, 2); // Disparo a cada 2 segundos
+        }, 2, 1); // Disparo a cada 2 segundos
+    }
+
+    public ArrayList<EnemyShip> getEnemyShips() { // Método para retornar a lista de naves inimigas
+        return enemyShips;
     }
 
     private void shootAtPlayer() {
