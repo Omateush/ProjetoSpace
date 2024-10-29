@@ -34,6 +34,14 @@ public class Laser {
         return boundingBox;
     }
 
+    public float getY() {
+        return y;
+    }
+
+    public boolean collidesWith(Rectangle otherRectangle) {
+        return boundingBox.overlaps(otherRectangle);
+    }
+
     public void dispose() {
         texture.dispose();
     }

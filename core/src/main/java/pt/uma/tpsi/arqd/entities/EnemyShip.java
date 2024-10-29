@@ -2,45 +2,45 @@ package pt.uma.tpsi.arqd.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import pt.uma.tpsi.arqd.game.Animator; // Importando a classe Animator
+import pt.uma.tpsi.arqd.game.Animator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class EnemyShip {
-    private float x, y;
-    private int width, height;
+    private int x, y;
     private Animator animator;
-    private ArrayList<Laser> lasers; // Armazena os lasers disparados por esta nave
+    private ArrayList<Laser> lasers;
 
-    public EnemyShip(SpriteBatch batch, float x, float y, int width, int height, String spriteSheetPath, int frameCols, int frameRows) {
+    public EnemyShip(int x, int y, int width, int height, String texturePath) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
-        this.animator = new Animator(batch, spriteSheetPath, frameCols, frameRows);
+        this.animator = new Animator(new SpriteBatch(), texturePath, 2, 1); // Configuração do Animator
         this.lasers = new ArrayList<>();
     }
 
     public void render(SpriteBatch batch) {
-        animator.render(batch, (int)x, (int)y);
-        for (Laser laser : lasers) {
+        animator.render(batch, x, y); // Renderiza a nave inimiga
+        Iterator<Laser> laserIterator = lasers.iterator();
+        while (laserIterator.hasNext()) {
+            Laser laser = laserIterator.next();
             laser.update();
             laser.render(batch);
+            if (laser.getY() < 0) { // Limite da tela para lasers dos inimigos
+                laserIterator.remove();
+            }
         }
     }
 
     public void shoot() {
-        float laserX = x + width / 2;
-        float laserY = y - 10; // Ajusta a posição do laser para disparar abaixo da nave
-        Laser laser = new Laser(laserX, laserY, 5, 10, -5); // Velocidade negativa para descer
-        lasers.add(laser);
-    }
-
-    public Rectangle getBoundingBox() {
-        return new Rectangle(x, y, width, height);
+        lasers.add(new Laser(x + 20, y - 10, 5, 10, -10)); // Laser disparado na direção do player
     }
 
     public ArrayList<Laser> getLasers() {
         return lasers;
+    }
+
+    public Rectangle getBoundingBox() {
+        return new Rectangle(x, y, animator.getWidth(), animator.getHeight());
     }
 
     public void dispose() {

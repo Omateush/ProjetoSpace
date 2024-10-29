@@ -1,13 +1,12 @@
 package pt.uma.tpsi.arqd.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.Gdx;
 
 public class GameHUD {
     private int playerHealth;
 
-    public GameHUD() {
-        this.playerHealth = 100; // Valor inicial da saúde do jogador
+    public void setPlayerHealth(int health) {
+        this.playerHealth = health;
     }
 
     public void updatePlayerHealth(int health) {
@@ -15,7 +14,6 @@ public class GameHUD {
     }
 
     public void render(SpriteBatch batch) {
-        // Renderiza o texto na tela usando a altura da tela
-        BitmapFont.drawText(10, Gdx.graphics.getHeight() - 10, "Health: " + playerHealth, batch);
+        BitmapFont.drawText(10, 780, "Health: " + playerHealth, batch);
     }
 }
