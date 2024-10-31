@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import pt.uma.tpsi.arqd.entities.Fleet;
-import pt.uma.tpsi.arqd.entities.Player;
+import pt.uma.tpsi.arqd.entities.PlayerShip;
 import pt.uma.tpsi.arqd.game.BackgroundManagement;
 import pt.uma.tpsi.arqd.game.GameHUD;
 import pt.uma.tpsi.arqd.game.BitmapFont;
@@ -14,7 +14,7 @@ public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private BackgroundManagement backgroundManagement;
     private GameHUD hud;
-    private Player player;
+    private PlayerShip player;
     private Fleet fleet;
     private boolean gameEnded;
     private String endMessage;
@@ -24,7 +24,15 @@ public class Main extends ApplicationAdapter {
         batch = new SpriteBatch();
         backgroundManagement = new BackgroundManagement();
         hud = new GameHUD();
-        player = new Player(batch, 100, 20, hud); // Passa o HUD para o player
+
+        // Inicializando o PlayerShip com os parâmetros corretos
+        float playerX = 100;
+        float playerY = 20;
+        float playerWidth = 50;
+        float playerHeight = 50;
+        int playerHealth = 100;
+        player = new PlayerShip(batch, playerX, playerY, playerWidth, playerHeight, playerHealth, hud); // Passa o HUD para o player
+
         fleet = new Fleet(batch, hud); // Passa o HUD para a Fleet
         gameEnded = false;
     }
@@ -38,13 +46,12 @@ public class Main extends ApplicationAdapter {
         backgroundManagement.render(batch);
         hud.render(batch);
 
-
         if (!gameEnded) {
             player.render(batch);
-            fleet.render(batch, player.getLasers(), player); // renderiza o espaço onde o player vai estar e colisoes
-            checkGameEndConditions(); // Verifica se jogo terminou boolean sim ou nao
+            fleet.render(batch, player.getLasers(), player); // Renderiza o espaço onde o player vai estar e colisoes
+            checkGameEndConditions(); // Verifica se o jogo terminou boolean sim ou nao
         } else {
-            // Mensagem do fim de jogo.
+            // Mensagem de fim de jogo
             BitmapFont.drawText(Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2, endMessage, batch);
         }
 
@@ -55,10 +62,17 @@ public class Main extends ApplicationAdapter {
         if (player.getHealth() <= 0) {
             endMessage = "Derrota! Sua vida chegou a zero!";
             gameEnded = true;
-        } else if (fleet.getEnemyShips().isEmpty()) {
-            endMessage = "Parabens! voce destruiu todas as naves inimigas!";
+        } else if (fleet.getEnemyShips().isEmpty()) { // Certifique-se de que Fleet tem o método getEnemyShips()
+            endMessage = "Parabéns! Você destruiu todas as naves inimigas!";
             gameEnded = true;
         }
     }
 
+    @Override
+    public void dispose() {
+        batch.dispose();
+        backgroundManagement.dispose();
+        hud.dispose();
+        player.dispose();
+    }
 }

@@ -1,13 +1,15 @@
+// Ship.java (Classe Base)
 package pt.uma.tpsi.arqd.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.ArrayList;
 
 public abstract class Ship {
-    protected float x, y;           // Posição da nave
-    protected float width, height;  // Dimensões da nave
-    protected int health;           // Vida da nave
-    protected Rectangle boundingBox; // Bounding box para detecção de colisão
+    protected float x, y;
+    protected float width, height;
+    protected int health;
+    protected ArrayList<Laser> lasers;
 
     public Ship(float x, float y, float width, float height, int health) {
         this.x = x;
@@ -15,25 +17,36 @@ public abstract class Ship {
         this.width = width;
         this.height = height;
         this.health = health;
-        this.boundingBox = new Rectangle(x, y, width, height);
+        this.lasers = new ArrayList<>(); // Inicializa a lista de lasers
     }
 
-    public abstract void shoot(); // Método abstrato para disparo, implementado nas subclasses
+    // Métodos abstratos para serem implementados pelas subclasses
+    public abstract void render(SpriteBatch batch);
+    public abstract void shoot();
+    public abstract void dispose();
+
+    // Método para acessar os lasers da nave
+    public ArrayList<Laser> getLasers() {
+        return lasers;
+    }
+
+    public Rectangle getBoundingBox() {
+        return new Rectangle(x, y, width, height);
+    }
 
     public void takeDamage(int damage) {
-        health -= damage;
-        if (health < 0) health = 0;
+        this.health -= damage;
     }
 
-    public boolean isDestroyed() {
-        return health <= 0;
+    public int getHealth() {
+        return health;
     }
 
-    public void updatePosition(float deltaX, float deltaY) {
-        this.x += deltaX;
-        this.y += deltaY;
-        this.boundingBox.setPosition(x, y);
+    public float getX() {
+        return x;
     }
 
-    public abstract void render(SpriteBatch batch); // Método abstrato para renderizar a nave
+    public float getY() {
+        return y;
+    }
 }

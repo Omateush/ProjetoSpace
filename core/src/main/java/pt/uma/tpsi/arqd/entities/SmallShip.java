@@ -1,33 +1,28 @@
 package pt.uma.tpsi.arqd.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import pt.uma.tpsi.arqd.game.Animator;
 
-class SmallShip {
-    private float x, y, width, height;
-    private Texture texture;
-    private Rectangle boundingBox;
+public class SmallShip extends Ship {
+    private Animator animator;
 
-    public SmallShip(float x, float width, float height) {
-        this.x = x;
-        this.width = width;
-        this.height = height;
-        this.y = Gdx.graphics.getHeight() - height; // Coloca a nave no topo da tela
-
-        // Carrega a textura da nave pequena
-        texture = new Texture("enemy-small.png");
-
-        // Define a bounding box da nave
-        boundingBox = new Rectangle(x, y, width, height);
+    public SmallShip(SpriteBatch batch, float x, float y) {
+        super(x, y, 60, 60, 100);
+        this.animator = new Animator(batch, "enemy-small.png", 2, 1);
     }
 
+    @Override
     public void render(SpriteBatch batch) {
-        batch.draw(texture, x, y, width, height); // Renderiza a nave na posição x, y
+        animator.render(batch, (int) x, (int) y);
     }
 
+    @Override
+    public void shoot() {
+        lasers.add(new Laser(x + width / 2, y, 5, 10, -10));
+    }
+
+    @Override
     public void dispose() {
-        texture.dispose(); // Libera os recursos da textura
+        animator.dispose();
     }
 }
