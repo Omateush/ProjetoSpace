@@ -12,33 +12,35 @@ import java.util.Iterator;
 public class PlayerShip extends Ship {
     private Animator animator;
     private GameHUD hud;
+    private ArrayList<Explosion> explosions;
 
     public PlayerShip(SpriteBatch batch, float x, float y, float width, float height, int health, GameHUD hud) {
         super(x, y, width, height, health);
         this.hud = hud;
-        this.animator = new Animator(batch, "ship.png", 5, 2); // Configuração da imagem para PlayerShip
-        this.hud.updatePlayerHealth(health); // Inicializa o HUD com a saúde do jogador
+        this.animator = new Animator(batch, "ship.png", 5, 2);
+        this.explosions = new ArrayList<>();
+        this.hud.updatePlayerHealth(health);
     }
 
     @Override
     public void render(SpriteBatch batch) {
-        handleInput(); // Movimenta e dispara
-        animator.render(batch, (int) x, (int) y); // Renderiza o player na tela, convertendo float para int
+        handleInput();
+        animator.render(batch, (int) x, (int) y);
 
-        // Renderiza os lasers e remove os que saem da tela
         Iterator<Laser> laserIterator = lasers.iterator();
         while (laserIterator.hasNext()) {
             Laser laser = laserIterator.next();
             laser.update();
             laser.render(batch);
-            if (laser.getY() > 800) { // Limite da tela
+            if (laser.getY() > 800) {
                 laserIterator.remove();
             }
         }
+
+        renderExplosions(batch); // Renderiza as explosões
     }
 
     private void handleInput() {
-        // Movimento para a esquerda e direita, com limites da tela
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             x -= 5;
             if (x < 0) {
@@ -58,13 +60,25 @@ public class PlayerShip extends Ship {
 
     @Override
     public void shoot() {
-        lasers.add(new Laser(x + width / 2 - 2.5f, y + height, 5, 10, 10)); // Configura o laser do player
+        lasers.add(new Laser(x + width / 2 - 2.5f, y + height, 5, 10, 10, 10));
     }
 
     @Override
     public void takeDamage(int damage) {
         super.takeDamage(damage);
-        hud.updatePlayerHealth(health); // Atualiza o HUD com a nova saúde do jogador
+        hud.updatePlayerHealth(health);
+        explosions.add(new Explosion(x, y)); // Adiciona uma explosão na posição atual do jogador
+    }
+
+    private void renderExplosions(SpriteBatch batch) {
+        Iterator<Explosion> explosionIterator = explosions.iterator();
+        while (explosionIterator.hasNext()) {
+            Explosion explosion = explosionIterator.next();
+            explosion.render(batch);
+            if (explosion.isFinished()) {
+                explosionIterator.remove();
+            }
+        }
     }
 
     @Override

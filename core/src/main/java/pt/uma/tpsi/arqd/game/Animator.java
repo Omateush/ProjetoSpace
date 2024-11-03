@@ -47,7 +47,7 @@ public class Animator {
         stateTime += Gdx.graphics.getDeltaTime();
         TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
 
-        // Assumindo que o SpriteBatch já foi iniciado no método de renderização que chamou este método
+
         batch.draw(currentFrame, flip ? posX + width : posX, posY, flip ? -width : width, height);
     }
 

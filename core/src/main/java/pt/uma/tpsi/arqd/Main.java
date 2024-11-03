@@ -1,5 +1,4 @@
 package pt.uma.tpsi.arqd;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -60,10 +59,10 @@ public class Main extends ApplicationAdapter {
 
     private void checkGameEndConditions() {
         if (player.getHealth() <= 0) {
-            endMessage = "Derrota! Sua vida chegou a zero!";
+            endMessage = "GAAAAAME OOOOOVER!";
             gameEnded = true;
-        } else if (fleet.getEnemyShips().isEmpty()) { // Certifique-se de que Fleet tem o método getEnemyShips()
-            endMessage = "Parabéns! Você destruiu todas as naves inimigas!";
+        } else if (fleet.getEnemyShips().isEmpty()) {
+            endMessage = "PARABENS VOCE GANHOU!";
             gameEnded = true;
         }
     }

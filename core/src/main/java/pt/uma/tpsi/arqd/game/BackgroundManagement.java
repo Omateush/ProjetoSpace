@@ -11,7 +11,7 @@ public class BackgroundManagement {
     private Sprite sprite;
 
     public BackgroundManagement() {
-        background = new Texture("space.jpg"); // AQUI POSSO MUDAR O BACKGROUND DO JOGO
+        background = new Texture("space.png"); // AQUI POSSO MUDAR O BACKGROUND DO JOGO
         sprite = new Sprite(background);
 
 

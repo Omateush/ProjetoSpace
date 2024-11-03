@@ -6,9 +6,9 @@ import pt.uma.tpsi.arqd.game.Animator;
 public class SmallShip extends Ship {
     private Animator animator;
 
-    public SmallShip(SpriteBatch batch, float x, float y) {
-        super(x, y, 60, 60, 100);
-        this.animator = new Animator(batch, "enemy-small.png", 2, 1);
+    public SmallShip(SpriteBatch batch, float x, float y, float width, float height) {
+        super(x, y, width, height, 50); // Define saúde inicial para SmallShip
+        this.animator = new Animator(batch, "enemy-small.png", 2, 1); // Imagem e configuração para SmallShip
     }
 
     @Override
@@ -18,7 +18,7 @@ public class SmallShip extends Ship {
 
     @Override
     public void shoot() {
-        lasers.add(new Laser(x + width / 2, y, 5, 10, -10));
+        lasers.add(new Laser(x, y - height, 5, 10, -10, 10)); // Tiro padrão com 10 de dano
     }
 
     @Override

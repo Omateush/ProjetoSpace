@@ -11,7 +11,7 @@ public class Laser {
     private Texture texture;
     private Rectangle boundingBox;
 
-    public Laser(float x, float y, float width, float height, float speed) {
+    public Laser(float x, float y, float width, float height, float speed, int damage) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -34,6 +34,7 @@ public class Laser {
         return boundingBox;
     }
 
+    // Método getY() para obter a posição y do laser
     public float getY() {
         return y;
     }
